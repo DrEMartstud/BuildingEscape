@@ -28,7 +28,10 @@ protected:
 private:
 	UPROPERTY(EditAnywhere)
 	float reach = 100.f;
+	
+	UPROPERTY()
 	UPhysicsHandleComponent* physicsHandle = nullptr;
+	UPROPERTY()
 	UInputComponent* inputComponent = nullptr;
 
 	void Grab();

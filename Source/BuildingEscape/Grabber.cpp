@@ -25,6 +25,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 //Moves held object
 	if (physicsHandle->GrabbedComponent) {
+		if (!physicsHandle) {return;}
 		physicsHandle->SetTargetLocation(GetPlayersReach());
 	}
 }
@@ -45,8 +46,8 @@ void UGrabber::SetupInputComponent() {
 
 void UGrabber::FindPhysicsHande() {
 	physicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-	if (physicsHandle == nullptr){ 
-		UE_LOG(LogTemp, Error, TEXT("ERROR! No physicsHande component was found on %s!"), *GetOwner()->GetName());
+	if (!physicsHandle){ 
+		UE_LOG(LogTemp, Error, TEXT("No physicsHande component was found on %s!"), *GetOwner()->GetName());
 	}
 }
 
@@ -54,7 +55,8 @@ void UGrabber::Grab() {
 
 	FHitResult hitResult = GetFirstPhysicsBodyInReach();
 	UPrimitiveComponent* componentToGrab = hitResult.GetComponent();
-	if (hitResult.GetActor()) {
+	AActor* actorHit = hitResult.GetActor();
+	if (actorHit) { if (!physicsHandle) {return;} 
 	physicsHandle->GrabComponentAtLocation(
 		componentToGrab,
 		NAME_None,
@@ -64,6 +66,7 @@ void UGrabber::Grab() {
 }
 
 void UGrabber::Release() {
+	if (!physicsHandle) {return;}
 	physicsHandle->ReleaseComponent();
 }
 
